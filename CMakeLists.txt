@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.15)
+
+project(utf8-utf16-converter)
+
+add_subdirectory(converter)
+add_subdirectory(test)

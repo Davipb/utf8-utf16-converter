@@ -11,18 +11,22 @@
 
 static int help(const char* base)
 {
-    printf("Usage: %s <mode> <input> <output>\n", base);
+    printf("Usage: %s <mode> <input> <expected> [<output>] \n", base);
     printf("\n");
     printf("mode:\n");
     printf("'utf8' if the input file is in UTF-8, 'utf16' if the input file is in UTF-16.\n");
-    printf("The output file will be in the opposite encoding\n");
+    printf("The expect file must be in the opposite encoding\n");
     printf("\n");
     printf("input:\n");
     printf("Input file to be read. Must be in the encoding specified by 'mode'\n");
     printf("\n");
+    printf("expected:\n");
+    printf("The file that has the expected output of the converted input file.\n");
+    printf("\n");
     printf("output:\n");
-    printf("Output file where the converted result will be stored.\n");
-    printf("Its contents will be completely overwritten.\n");
+    printf("If set, the conversion output will be written to this file.\n");
+    printf("Returns with exit code 0 if the converted input was the same as expected,\n");
+    printf("non-zero otherwise.\n");
     return EXIT_SUCCESS;
 }
 
@@ -149,9 +153,35 @@ static bool read_file(char const* path, char** buffer, size_t* buffer_len)
     return true;
 }
 
+// Writes a buffer to a file
+//
+// path: The path of the file to write to. Its contents will be completely overwritten.
+// buffer: The buffer to write to the file.
+// len: Length of 'buffer', in characters.
+static bool write_file(char const* path, char const* buffer, size_t len)
+{
+    FILE* file = fopen(path, "wb");
+    if (file == NULL)
+    {
+        fprintf(stderr, "Unable to open file %s for writing", path);
+        return false;
+    }
+
+    size_t written = fwrite(buffer, 1, len, file);
+    fclose(file);
+
+    if (written != len)
+    {
+        fprintf(stderr, "Error writing to %s, its contents may be corrupted", path);
+        return false;
+    }
+
+    return true;
+}
+
 int main(int argc, char const* argv[]) 
 {
-    if (argc != 4)
+    if (argc < 4 || argc > 5)
         return help(argv[0]);
     
     char const* mode = argv[1];
@@ -205,19 +235,19 @@ int main(int argc, char const* argv[])
     free(input);
 
 
-    FILE* output_file = fopen(argv[3], "wb");
-    if (output_file == NULL)
-    {
-        fprintf(stderr, "Unable to open output file %s", argv[3]);
+    if (argc >= 5 && !write_file(argv[4], output, output_len))
         return EXIT_FAILURE;
-    }
 
-    size_t written = fwrite(output, sizeof(char), output_len, output_file);
-    if (written < output_len)
-    {
-        fprintf(stderr, "Unable to write output to file %s", argv[3]);
+    char* expected;
+    size_t expected_len;
+    if (!read_file(argv[3], &expected, &expected_len))
         return EXIT_FAILURE;
-    }
+
+    bool success = output_len == expected_len && memcmp(output, expected, output_len) == 0;
+    if (success)
+        printf("SUCCESS\n\n");
+    else
+        printf("FAILURE\n\n");
 
     double time_seconds = difftime(time_end, time_start);
     uint64_t clock_delta = (uint64_t)clock_end - clock_start;
@@ -249,4 +279,9 @@ int main(int argc, char const* argv[])
     printf("\n");
 
     printf("CPU ticks: %"PRIu64"\n", clock_delta);
+
+    if (success)
+        return EXIT_SUCCESS;
+
+    return EXIT_FAILURE;
 }

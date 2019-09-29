@@ -26,6 +26,8 @@ typedef uint32_t codepoint_t;
 // The mask to apply to a character before testing it against HIGH_SURROGATE_VALUE or LOW_SURROGATE_VALUE
 #define SURROGATE_MASK 0xFC00
 
+// The value that is subtracted from a codepoint before encoding it in a surrogate pair
+#define SURROGATE_CODEPOINT_OFFSET 0x10000
 // A mask that can be applied to a surrogate to extract the codepoint value contained in it
 #define SURROGATE_CODEPOINT_MASK 0x03FF
 // The number of bits of SURROGATE_CODEPOINT_MASK
@@ -61,10 +63,10 @@ typedef struct
 // where N is the index + 1
 static const utf8_pattern utf8_leading_bytes[] =
 {
-    { 0x80, 0x00 }, // 0xxxxxxxx
-    { 0xE0, 0xC0 }, // 110xxxxxx
-    { 0xF0, 0xE0 }, // 1110xxxxx
-    { 0xF8, 0xF0 }  // 11110xxxx
+    { 0x80, 0x00 }, // 0xxxxxxx
+    { 0xE0, 0xC0 }, // 110xxxxx
+    { 0xF0, 0xE0 }, // 1110xxxx
+    { 0xF8, 0xF0 }  // 11110xxx
 };
 
 
@@ -102,7 +104,8 @@ static codepoint_t decode_utf16(utf16_t const* utf16, size_t len, size_t* index)
     // The low bits of the codepoint are the value bits of the low surrogate
     codepoint_t result = high & SURROGATE_CODEPOINT_MASK;
     result <<= SURROGATE_CODEPOINT_BITS;
-    result &= low & SURROGATE_CODEPOINT_MASK;
+    result |= low & SURROGATE_CODEPOINT_MASK;
+    result += SURROGATE_CODEPOINT_OFFSET;
 
     // Overlong encoding
     // A BMP character, which could be encoded with a single UTF-16 character, was instead

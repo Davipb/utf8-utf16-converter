@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include <stddef.h>
 
 
 typedef uint8_t utf8_t; // The type of a single UTF-8 character

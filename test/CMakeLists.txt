@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(test LANGUAGES C)
+project(tester LANGUAGES C)
 
-add_executable(test src/test.c)
-target_link_libraries(test converter)
+add_executable(tester src/test.c)
+target_link_libraries(tester converter)
+
+IF(UNIX)
+    target_link_libraries(tester m) # Link math library
+ENDIF()

@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <time.h>
 #include <math.h>
+#include <inttypes.h>
 
 #include "converter.h"
 
@@ -54,20 +55,30 @@ static void print_time(double seconds)
 {
     static char const* const suffixes[] =
     {
+        "ns",
         "us",
         "ms",
         "s"
     };
     static size_t const suffixes_len = sizeof suffixes / sizeof suffixes[0];
 
-    unsigned long nanos = (unsigned long)(seconds * 1e9);
+    uint64_t nanos = (uint64_t)(seconds * 1e9);
+
+    bool any_printed = false;
 
     size_t suffix = suffixes_len;
     while (suffix-- > 0)
     {
-        unsigned long unit = nanos / (unsigned long)pow(10.0, suffix);
-        if (unit > 0 || suffix == 0)
-            printf("%lu%s ", unit, suffixes[suffix]);
+        uint64_t unit = nanos / (uint64_t)pow(1000.0, suffix);
+
+        if (suffix < suffixes_len - 1)
+            unit %= 1000;
+
+        if (unit > 0 || (suffix == 0 && !any_printed))
+        {
+            any_printed = true;
+            printf("%"PRIu64"%s ", unit, suffixes[suffix]);
+        }
     }
 }
 
@@ -146,8 +157,8 @@ int main(int argc, char const* argv[])
     char const* mode = argv[1];
 
     bool is_utf8;
-    if (strcmp(mode, "utf8")) { is_utf8 = true; }
-    else if (strcmp(mode, "utf16")) { is_utf8 = false; }
+    if (strcmp(mode, "utf8") == 0) { is_utf8 = true; }
+    else if (strcmp(mode, "utf16") == 0) { is_utf8 = false; }
     else
     {
         fprintf(stderr, "Mode must be either 'utf8' or 'utf16', case-sensitive");
@@ -190,10 +201,7 @@ int main(int argc, char const* argv[])
 
     time_t time_end = time(NULL);
     clock_t clock_end = clock();
-
-    double time_seconds = difftime(time_end, time_start);
-    double clock_seconds = ((double)clock_end - clock_start) / CLOCKS_PER_SEC;
-
+        
     free(input);
 
 
@@ -210,6 +218,10 @@ int main(int argc, char const* argv[])
         fprintf(stderr, "Unable to write output to file %s", argv[3]);
         return EXIT_FAILURE;
     }
+
+    double time_seconds = difftime(time_end, time_start);
+    uint64_t clock_delta = (uint64_t)clock_end - clock_start;
+    double clock_seconds = ((double)clock_delta) / CLOCKS_PER_SEC;
 
     if (is_utf8)
         printf("UTF-8 to UTF-16");
@@ -235,4 +247,6 @@ int main(int argc, char const* argv[])
     printf("CPU time:  ");
     print_time(clock_seconds);
     printf("\n");
+
+    printf("CPU ticks: %"PRIu64"\n", clock_delta);
 }

@@ -1,5 +1,0 @@
-[*.utf8.txt]
-charset = utf-8
-
-[*.utf16.txt]
-charset = utf-16le

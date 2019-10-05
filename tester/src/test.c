@@ -14,19 +14,21 @@ static int help(const char* base)
     printf("Usage: %s <mode> <input> <expected> [<output>] \n", base);
     printf("\n");
     printf("mode:\n");
-    printf("'utf8' if the input file is in UTF-8, 'utf16' if the input file is in UTF-16.\n");
-    printf("The expect file must be in the opposite encoding\n");
+    printf("'utf8' if the input file is in UTF-8, 'utf16' if the input file is in UTF-16LE. Case-sensitive.\n");
     printf("\n");
     printf("input:\n");
-    printf("Input file to be read. Must be in the encoding specified by 'mode'\n");
+    printf("Path of the input file to be read and converted. Must be in the encoding specified by 'mode'.\n");
+    printf("The file will be read byte-by-byte with no changes. This means that a BOM, if present, will not be removed.\n");
     printf("\n");
     printf("expected:\n");
-    printf("The file that has the expected output of the converted input file.\n");
+    printf("The file that has the expected output of the converted input file. Must be in the opposite encoding of the one specified by `mode`.\n");
+    printf("In order for the test to be successful, the converted output must match this file exactly, byte-by-byte. No special handling is granted for the BOM, final newlines, or any other character.\n");
     printf("\n");
     printf("output:\n");
     printf("If set, the conversion output will be written to this file.\n");
-    printf("Returns with exit code 0 if the converted input was the same as expected,\n");
-    printf("non-zero otherwise.\n");
+    printf("\n");
+    printf("Returns with exit code 0 if the converted input was the same as expected, non-zero otherwise.\n");
+    printf("\n");
     return EXIT_SUCCESS;
 }
 

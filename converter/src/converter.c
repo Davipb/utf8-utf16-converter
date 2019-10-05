@@ -115,14 +115,7 @@ static codepoint_t decode_utf16(utf16_t const* utf16, size_t len, size_t* index)
     result <<= SURROGATE_CODEPOINT_BITS;
     result |= low & SURROGATE_CODEPOINT_MASK;
     result += SURROGATE_CODEPOINT_OFFSET;
-
-    // Overlong encoding
-    // A BMP character, which could be encoded with a single UTF-16 character, was instead
-    // encoded with a surrogate pair
-    // Invalid
-    if (result <= BMP_END)
-        return INVALID_CODEPOINT;
-
+    
     // And if all else fails, it's valid
     return result;
 }

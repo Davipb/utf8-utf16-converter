@@ -27,3 +27,7 @@ losing information about the original invalid bytes.
     * The UTF-16 surrogate 0xD801 encoded in UTF-8
 
 ### `utf16-to-utf8`
+* `unmatched_high`
+    * Unmatched high surrogate for 👍
+* `unmatched_low`
+    * Unmatched low surrogate for 👍

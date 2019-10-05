@@ -80,3 +80,14 @@ add_test(
 
 ## One-Way: UTF-16 -> UTF-8
 
+add_test(
+    NAME utf16.unmatched_high
+    COMMAND tester utf16 utf16-to-utf8/unmatched_high.utf16.txt utf16-to-utf8/invalid.utf8.txt
+    WORKING_DIRECTORY ${TEST_DIR}
+)
+
+add_test(
+    NAME utf16.unmatched_low
+    COMMAND tester utf16 utf16-to-utf8/unmatched_low.utf16.txt utf16-to-utf8/invalid.utf8.txt
+    WORKING_DIRECTORY ${TEST_DIR}
+)

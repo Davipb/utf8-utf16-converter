@@ -51,6 +51,18 @@ add_test(
     WORKING_DIRECTORY ${TEST_DIR}
 )
 
+add_test(
+    NAME utf8.bible
+    COMMAND tester utf8 two-way/bible.utf8.txt two-way/bible.utf16.txt
+    WORKING_DIRECTORY ${TEST_DIR}
+)
+
+add_test(
+    NAME utf16.bible
+    COMMAND tester utf16 two-way/bible.utf16.txt two-way/bible.utf8.txt
+    WORKING_DIRECTORY ${TEST_DIR}
+)
+
 
 ## One-Way: UTF-8 -> UTF-16
 

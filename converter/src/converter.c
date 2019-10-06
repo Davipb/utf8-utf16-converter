@@ -127,13 +127,13 @@ static int calculate_utf8_len(codepoint_t codepoint)
     // An array with the max values would be more elegant, but a bit too heavy
     // for this common function
 
-    if (codepoint < UTF8_1_MAX)
+    if (codepoint <= UTF8_1_MAX)
         return 1;
 
-    if (codepoint < UTF8_2_MAX)
+    if (codepoint <= UTF8_2_MAX)
         return 2;
 
-    if (codepoint < UTF8_3_MAX)
+    if (codepoint <= UTF8_3_MAX)
         return 3;
 
     return 4;
@@ -259,7 +259,7 @@ static codepoint_t decode_utf8(utf8_t const* utf8, size_t len, size_t* index)
 
     // Surrogates are invalid Unicode codepoints, and should only be used in UTF-16
     // Invalid encoding
-    if ((codepoint & GENERIC_SURROGATE_MASK) == GENERIC_SURROGATE_VALUE)
+    if (codepoint < BMP_END && (codepoint & GENERIC_SURROGATE_MASK) == GENERIC_SURROGATE_VALUE)
         return INVALID_CODEPOINT;
 
     // UTF-8 can encode codepoints larger than the Unicode standard allows

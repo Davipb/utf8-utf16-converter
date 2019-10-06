@@ -8,4 +8,4 @@ For more information on how to use the functions, consult the documentation comm
 
 The `tester` folder contains an executable that can be used to test the conversions,
 along with a suite of CTest test cases.
-For more information on how to use the tester program, consult the `README.md` in its folder.
+For more information on how to use the tester program, consult the [`README.md` in its folder](./tester/README.md).

@@ -22,3 +22,9 @@ In order for the test to be successful, the converted output must match this fil
 If set, the conversion output will be written to this file.  
 
 Returns with exit code 0 if the converted input was the same as expected, non-zero otherwise.
+
+## Test Cases
+A number of test cases are included in the `test-cases` directory and configured to
+run with CTest.
+For more information on the test case data, please check [`README.md` on the `test-cases` directory](./test-cases/README.md).
+

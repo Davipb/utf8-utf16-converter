@@ -267,7 +267,7 @@ int main(int argc, char const* argv[])
     printf("\n");
 
     printf("Output: ");
-    print_size(input_len);
+    print_size(output_len);
     printf("\n");
 
     printf("\n");

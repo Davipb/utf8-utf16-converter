@@ -63,6 +63,18 @@ add_test(
     WORKING_DIRECTORY ${TEST_DIR}
 )
 
+add_test(
+    NAME utf8.all
+    COMMAND tester utf8 two-way/all.utf8.txt two-way/all.utf16.txt
+    WORKING_DIRECTORY ${TEST_DIR}
+)
+
+add_test(
+    NAME utf16.all
+    COMMAND tester utf16 two-way/all.utf16.txt two-way/all.utf8.txt
+    WORKING_DIRECTORY ${TEST_DIR}
+)
+
 
 ## One-Way: UTF-8 -> UTF-16
 

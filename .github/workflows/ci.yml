@@ -8,13 +8,10 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: Create the build folder
+    - name: Build and test
       run: |
-        mkdir utf8-utf16-converter/build
-        cd utf8-utf16-converter/build
-    - name: Build
-      run: |
+        mkdir ./build
+        cd ./build
         cmake -DCMAKE_BUILD_TYPE=Release ..
         cmake --build .
-    - name: Test
-      run: ctest
+        ctest

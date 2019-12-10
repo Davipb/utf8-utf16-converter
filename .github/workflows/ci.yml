@@ -1,0 +1,20 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Create the build folder
+      run: |
+        mkdir build
+        cd build
+    - name: Build
+      run: |
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        cmake --build .
+    - name: Test
+      run: ctest

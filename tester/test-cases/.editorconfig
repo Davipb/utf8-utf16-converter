@@ -1,6 +1,7 @@
 [*.{utf8,utf16}.txt]
 insert_final_newline = false
 trim_trailing_whitespace = false
+end_of_line = crlf
 
 [*.utf8.txt]
 charset = utf-8

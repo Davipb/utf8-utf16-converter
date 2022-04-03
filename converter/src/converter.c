@@ -1,5 +1,4 @@
 #include <converter.h>
-#include <stdio.h>
 #include <stdbool.h>
 
 // The type of a single Unicode codepoint
